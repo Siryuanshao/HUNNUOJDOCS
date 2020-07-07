@@ -15,86 +15,8 @@
 
 建议使用nginx做反向代理，对前端进行gzip压缩(nginx.conf)
 
-```nginx
-user www-data;
-worker_processes auto;
-pid /run/nginx.pid;
-include /etc/nginx/modules-enabled/*.conf;
 
-events {
-	worker_connections 1024;
-}
 
-http {
-
-	##
-	# Basic Settings
-	##
-
-	sendfile on;
-	tcp_nopush on;
-	tcp_nodelay on;
-	keepalive_timeout 65;
-	types_hash_max_size 2048;
-	# server_tokens off;
-
-	# server_names_hash_bucket_size 64;
-	# server_name_in_redirect off;
-
-	include /etc/nginx/mime.types;
-	default_type application/octet-stream;
-
-	##
-	# SSL Settings
-	##
-
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
-	ssl_prefer_server_ciphers on;
-
-	##
-	# Logging Settings
-	##
-
-	access_log /var/log/nginx/access.log;
-	error_log /var/log/nginx/error.log;
-
-	##
-	# Gzip Settings
-	##
-
-	gzip on;
-	gzip_static on;
-	gzip_buffers 4 16k;
-	gzip_comp_level 6;
-	gzip_types text/plain application/javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
-
-	server {
-		listen  80;
-		server_name  hunnuoj;
-		
-		location /static {
-			alias /www/hunnuoj/public/static;
-		}
-		
-		location / {
-			root /www/hunnuoj;
-			index index.html;
-		}
-		
-		location /admin {
-			alias /www/hunnuoj;
-			index admin.html;
-		}
-		
-		location /api {
-			proxy_pass http://127.0.0.1:8080/api;
-			proxy_http_version 1.1;
-			proxy_set_header Connection "";
-		}
-	}
-}
-
-```
 
 后端配置上传文件写入磁盘的路径(backend.properties)
 
@@ -127,7 +49,7 @@ sudo docker run -i -t -d -v /test_case_base_dir:/test_case_base_dir -v /dev/shm:
 
 #### 普通题目放置目录
 
-/test_case_base_dir/problem/:problemId/
+/test_case_base_dir/problem/:problemId
 
 #### 比赛题目放置目录
 
